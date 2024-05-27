@@ -27,7 +27,7 @@ import "./Board.css";
  *
  **/
 
-function Board({ nrows = 3, ncols = 3, chanceLightStartsOn=0.5 }) {
+function Board({ nrows = 4, ncols = 4, chanceLightStartsOn = 0.5 }) {
   const [board, setBoard] = useState(createBoard());
 
   /** create a board nrows high/ncols wide, each cell randomly lit or unlit */
@@ -47,14 +47,12 @@ function Board({ nrows = 3, ncols = 3, chanceLightStartsOn=0.5 }) {
     return initialBoard;
   }
 
-
   function hasWon() {
-    return board.every((row) => row.every((col) => col.isLit === false))
+    return board.every((row) => row.every((col) => col.isLit === false));
   }
 
   function flipCellsAround(coord) {
-    setBoard((oldBoard) => {
-      
+    setBoard(oldBoard => {
       const [y, x] = coord.split("-").map(Number);
 
       const flipCell = (y, x, boardCopy) => {
@@ -63,35 +61,32 @@ function Board({ nrows = 3, ncols = 3, chanceLightStartsOn=0.5 }) {
         if (x >= 0 && x < ncols && y >= 0 && y < nrows) {
           boardCopy[y][x].isLit = !boardCopy[y][x].isLit;
         }
-        return boardCopy
+        return boardCopy;
       };
 
-      console.log(oldBoard)
-      const boardCopy = oldBoard.map(row=> [...row] )
+      console.log(oldBoard);
+      const boardCopy = JSON.parse(JSON.stringify(oldBoard));
+
       flipCell(y, x, boardCopy);
       flipCell(y, x - 1, boardCopy);
       flipCell(y, x + 1, boardCopy);
       flipCell(y - 1, x, boardCopy);
       flipCell(y + 1, x, boardCopy);
 
+      console.log(boardCopy);
 
-      console.log(boardCopy)
-    
-      
-      
-      return boardCopy
+      return boardCopy;
     });
+    
   }
 
   // if the game is won, just show a winning msg & render nothing else
-  if(hasWon()){
-    return(
-      <div> You won!!</div>
-    )
+  if (hasWon()) {
+    return <div> You won!!</div>;
   }
 
   // TODO
-  else{
+  else {
     return (
       <div className={hasWon() ? "Hidden" : "Board"}>
         <table>
@@ -104,7 +99,11 @@ function Board({ nrows = 3, ncols = 3, chanceLightStartsOn=0.5 }) {
             {board.map((row, i) => (
               <tr key={i}>
                 {row.map((col, i) => (
-                  <Cell key={col.coord} isLit={col.isLit} flipCellsAroundMe={() => flipCellsAround(col.coord)} />
+                  <Cell
+                    key={col.coord}
+                    isLit={col.isLit}
+                    flipCellsAroundMe={() => flipCellsAround(col.coord)}
+                  />
                 ))}
               </tr>
             ))}
